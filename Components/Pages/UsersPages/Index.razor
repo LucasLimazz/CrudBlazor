@@ -1,0 +1,31 @@
+﻿@page "/users"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject CrudBlazor.Data.AppDbContext DB
+@using CrudBlazor.Models
+
+<PageTitle>Usuários</PageTitle>
+
+<h1>Usuários cadastrados</h1>
+
+<p>
+    <a href="users/create" class="btn">Incluir novo usuário</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.Usuarios">
+    <PropertyColumn Property="users => users.Nome" />
+    <PropertyColumn Property="users => users.Idade" />
+    <PropertyColumn Property="users => users.CPF" />
+    <PropertyColumn Property="users => users.Endereco" />
+    <PropertyColumn Property="users => users.CEP" />
+    <PropertyColumn Property="users => users.Cidade" />
+    <PropertyColumn Property="users => users.Estado" />
+
+    <TemplateColumn Context="users">
+        <a href="@($"users/edit?id={users.Id}")">Editar</a> |
+        <a href="@($"users/details?id={users.Id}")">Visualizar</a> |
+        <a href="@($"users/delete?id={users.Id}")">Excluir</a>
+    </TemplateColumn>
+</QuickGrid>
+
+<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+

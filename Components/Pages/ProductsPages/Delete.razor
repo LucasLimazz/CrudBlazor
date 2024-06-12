@@ -1,0 +1,85 @@
+﻿@page "/products/delete"
+@inject CrudBlazor.Data.AppDbContext DB
+@using CrudBlazor.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Excluir</PageTitle>
+
+<h1>Exclusão de produto</h1>
+
+<h3>Você tem certeza que deseja excluir este produto?</h3>
+<div>
+    <h4>Products</h4>
+    <hr />
+    @if (products is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">CodInterno</dt>
+            <dd class="col-sm-10">@products.CodInterno</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Descricao</dt>
+            <dd class="col-sm-10">@products.Descricao</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">TipoProduto</dt>
+            <dd class="col-sm-10">@products.TipoProduto</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">PesoBruto</dt>
+            <dd class="col-sm-10">@products.PesoBruto</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">PesoLiq</dt>
+            <dd class="col-sm-10">@products.PesoLiq</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Estoque</dt>
+            <dd class="col-sm-10">@products.Estoque</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">EstoqueQtd</dt>
+            <dd class="col-sm-10">@products.EstoqueQtd</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Unidade</dt>
+            <dd class="col-sm-10">@products.Unidade</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Grupo</dt>
+            <dd class="col-sm-10">@products.Grupo</dd>
+        </dl>
+        <EditForm method="post" Model="products" OnValidSubmit="DeleteProducts" FormName="delete" Enhance>
+            <button type="submit" class="btn-danger" disabled="@(products is null)">Excluir</button> |
+            <a href="/products">Cancelar</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    Products? products;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await DB.Produtos.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (products is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public async Task DeleteProducts()
+    {
+        DB.Produtos.Remove(products!);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/products");
+    }
+}

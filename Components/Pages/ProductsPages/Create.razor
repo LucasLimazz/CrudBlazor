@@ -1,0 +1,84 @@
+﻿@page "/products/create"
+@inject CrudBlazor.Data.AppDbContext DB
+@using CrudBlazor.Models
+@inject NavigationManager NavigationManager
+
+<PageTitle>Produto</PageTitle>
+
+<h1>Incluir novo produto</h1>
+
+<h4>Preencha os campos abaixo para incluir um novo produto:</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Products" OnValidSubmit="AddProducts" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="codinterno" class="form-label">Código Interno:</label> 
+                <InputText id="codinterno" @bind-Value="Products.CodInterno" class="form-control" /> 
+                <ValidationMessage For="() => Products.CodInterno" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição do produto:</label> 
+                <InputText id="descricao" @bind-Value="Products.Descricao" class="form-control" /> 
+                <ValidationMessage For="() => Products.Descricao" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="tipoproduto" class="form-label">Tipo de produto:</label> 
+                <InputText id="tipoproduto" @bind-Value="Products.TipoProduto" class="form-control" /> 
+                <ValidationMessage For="() => Products.TipoProduto" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="pesobruto" class="form-label">Peso bruto:</label> 
+                <InputNumber id="pesobruto" @bind-Value="Products.PesoBruto" class="form-control" /> 
+                <ValidationMessage For="() => Products.PesoBruto" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="pesoliq" class="form-label">Peso liquido:</label> 
+                <InputNumber id="pesoliq" @bind-Value="Products.PesoLiq" class="form-control" /> 
+                <ValidationMessage For="() => Products.PesoLiq" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="estoque" class="form-label">Estoque:</label> 
+                <InputText id="estoque" @bind-Value="Products.Estoque" class="form-control" /> 
+                <ValidationMessage For="() => Products.Estoque" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="estoqueqtd" class="form-label">Quantidade em estoque:</label> 
+                <InputNumber id="estoqueqtd" @bind-Value="Products.EstoqueQtd" class="form-control" /> 
+                <ValidationMessage For="() => Products.EstoqueQtd" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="unidade" class="form-label">Unidade:</label> 
+                <InputText id="unidade" @bind-Value="Products.Unidade" class="form-control" /> 
+                <ValidationMessage For="() => Products.Unidade" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="grupo" class="form-label">Grupo:</label> 
+                <InputText id="grupo" @bind-Value="Products.Grupo" class="form-control" /> 
+                <ValidationMessage For="() => Products.Grupo" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Incluir Produto</button>
+        </EditForm>
+    </div>
+</div>
+<br />
+<div>
+    <a href="/products">Voltar para lista</a>
+</div>
+<br />
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Products Products { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddProducts()
+    {
+        DB.Produtos.Add(Products);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/products");
+    }
+}

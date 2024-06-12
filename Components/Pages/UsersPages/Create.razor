@@ -1,0 +1,73 @@
+﻿@page "/users/create"
+@inject CrudBlazor.Data.AppDbContext DB
+@using CrudBlazor.Models
+@inject NavigationManager NavigationManager
+
+<PageTitle>Cadastro de Usuários</PageTitle>
+
+<h1>Inclusão de novo usuário</h1>
+
+<h4>Preencha os campos abaixo:</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Users" OnValidSubmit="AddUsers" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label> 
+                <InputText id="nome" @bind-Value="Users.Nome" class="form-control" /> 
+                <ValidationMessage For="() => Users.Nome" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="idade" class="form-label">Idade:</label> 
+                <InputText id="idade" @bind-Value="Users.Idade" class="form-control" /> 
+                <ValidationMessage For="() => Users.Idade" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="cpf" class="form-label">CPF:</label> 
+                <InputText id="cpf" @bind-Value="Users.CPF" class="form-control" /> 
+                <ValidationMessage For="() => Users.CPF" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="endereco" class="form-label">Endereco:</label> 
+                <InputText id="endereco" @bind-Value="Users.Endereco" class="form-control" /> 
+                <ValidationMessage For="() => Users.Endereco" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="cep" class="form-label">CEP:</label> 
+                <InputText id="cep" @bind-Value="Users.CEP" class="form-control" /> 
+                <ValidationMessage For="() => Users.CEP" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="cidade" class="form-label">Cidade:</label> 
+                <InputText id="cidade" @bind-Value="Users.Cidade" class="form-control" /> 
+                <ValidationMessage For="() => Users.Cidade" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="estado" class="form-label">Estado:</label> 
+                <InputText id="estado" @bind-Value="Users.Estado" class="form-control" /> 
+                <ValidationMessage For="() => Users.Estado" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Incluir</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/users">Voltar para lista</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Users Users { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddUsers()
+    {
+        DB.Usuarios.Add(Users);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/users");
+    }
+}

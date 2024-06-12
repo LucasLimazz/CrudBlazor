@@ -1,0 +1,30 @@
+﻿@page "/products"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject CrudBlazor.Data.AppDbContext DB
+@using CrudBlazor.Models
+
+<PageTitle>Produtos</PageTitle>
+
+<h1>Tabela de produtos cadastrados</h1>
+
+<p>
+    <a href="products/create" class="btn">Incluir novo produto</a> 
+</p>
+
+<QuickGrid Class="table" Items="DB.Produtos">
+    <PropertyColumn Property="products => products.CodInterno" />
+    <PropertyColumn Property="products => products.Descricao" />
+    <PropertyColumn Property="products => products.TipoProduto" />
+    <PropertyColumn Property="products => products.PesoBruto" />
+    <PropertyColumn Property="products => products.PesoLiq" />
+    <PropertyColumn Property="products => products.Estoque" />
+    <PropertyColumn Property="products => products.EstoqueQtd" />
+    <PropertyColumn Property="products => products.Unidade" />
+    <PropertyColumn Property="products => products.Grupo" />
+
+    <TemplateColumn Context="products">
+        <a href="@($"products/edit?id={products.Id}")">Editar</a> |
+        <a href="@($"products/details?id={products.Id}")">Visualizar</a> |
+        <a href="@($"products/delete?id={products.Id}")">Excluir</a>
+    </TemplateColumn>
+</QuickGrid>

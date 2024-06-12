@@ -1,0 +1,61 @@
+﻿@page "/products/details"
+@inject CrudBlazor.Data.AppDbContext DB
+@using CrudBlazor.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Visualização</PageTitle>
+
+<h1>Visualização do produto</h1>
+
+<div>
+    <h4>Dados do produto:</h4>
+    <hr />
+    @if (products is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">CodInterno</dt>
+            <dd class="col-sm-10">@products.CodInterno</dd>
+            <dt class="col-sm-2">Descricao</dt>
+            <dd class="col-sm-10">@products.Descricao</dd>
+            <dt class="col-sm-2">TipoProduto</dt>
+            <dd class="col-sm-10">@products.TipoProduto</dd>
+            <dt class="col-sm-2">PesoBruto</dt>
+            <dd class="col-sm-10">@products.PesoBruto</dd>
+            <dt class="col-sm-2">PesoLiq</dt>
+            <dd class="col-sm-10">@products.PesoLiq</dd>
+            <dt class="col-sm-2">Estoque</dt>
+            <dd class="col-sm-10">@products.Estoque</dd>
+            <dt class="col-sm-2">EstoqueQtd</dt>
+            <dd class="col-sm-10">@products.EstoqueQtd</dd>
+            <dt class="col-sm-2">Unidade</dt>
+            <dd class="col-sm-10">@products.Unidade</dd>
+            <dt class="col-sm-2">Grupo</dt>
+            <dd class="col-sm-10">@products.Grupo</dd>
+        </dl>
+        <div>
+            <a href="@($"/products/edit?id={products.Id}")">Alterar dados do produto</a> |
+            <a href="@($"/products")">Voltar para lista</a>
+        </div>
+    }
+</div>
+
+@code {
+    Products? products;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await DB.Produtos.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (products is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

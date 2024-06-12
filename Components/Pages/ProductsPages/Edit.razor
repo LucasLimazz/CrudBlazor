@@ -1,0 +1,126 @@
+﻿@page "/Products/edit"
+@inject CrudBlazor.Data.AppDbContext DB
+@using CrudBlazor.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Alterar</PageTitle>
+
+<h1>Alterar dados do produto</h1>
+
+<h4>Altere os dados do produto preenchendo os campos abaixo:</h4>
+<hr />
+@if (Products is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Products" OnValidSubmit="UpdateProducts" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Products.Id" value="@Products.Id" />
+                <div class="mb-3">
+                    <label for="codinterno" class="form-label">CodInterno:</label>
+                    <InputText id="codinterno" @bind-Value="Products.CodInterno" class="form-control" />
+                    <ValidationMessage For="() => Products.CodInterno" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="descricao" class="form-label">Descricao:</label>
+                    <InputText id="descricao" @bind-Value="Products.Descricao" class="form-control" />
+                    <ValidationMessage For="() => Products.Descricao" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="tipoproduto" class="form-label">TipoProduto:</label>
+                    <InputText id="tipoproduto" @bind-Value="Products.TipoProduto" class="form-control" />
+                    <ValidationMessage For="() => Products.TipoProduto" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="pesobruto" class="form-label">PesoBruto:</label>
+                    <InputNumber id="pesobruto" @bind-Value="Products.PesoBruto" class="form-control" />
+                    <ValidationMessage For="() => Products.PesoBruto" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="pesoliq" class="form-label">PesoLiq:</label>
+                    <InputNumber id="pesoliq" @bind-Value="Products.PesoLiq" class="form-control" />
+                    <ValidationMessage For="() => Products.PesoLiq" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="estoque" class="form-label">Estoque:</label>
+                    <InputText id="estoque" @bind-Value="Products.Estoque" class="form-control" />
+                    <ValidationMessage For="() => Products.Estoque" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="estoqueqtd" class="form-label">EstoqueQtd:</label>
+                    <InputNumber id="estoqueqtd" @bind-Value="Products.EstoqueQtd" class="form-control" />
+                    <ValidationMessage For="() => Products.EstoqueQtd" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="unidade" class="form-label">Unidade:</label>
+                    <InputText id="unidade" @bind-Value="Products.Unidade" class="form-control" />
+                    <ValidationMessage For="() => Products.Unidade" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="grupo" class="form-label">Grupo:</label>
+                    <InputText id="grupo" @bind-Value="Products.Grupo" class="form-control" />
+                    <ValidationMessage For="() => Products.Grupo" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Salvar alterações</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/products">Voltar para lista</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Products? Products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Products ??= await DB.Produtos.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Products is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateProducts()
+    {
+        DB.Attach(Products!).State = EntityState.Modified;
+
+        try
+        {
+            await DB.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ProductsExists(Products!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/products");
+    }
+
+    bool ProductsExists(int id)
+    {
+        return DB.Produtos.Any(e => e.Id == id);
+    }
+}
